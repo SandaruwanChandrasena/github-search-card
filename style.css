@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+  max-width: 500px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.search-box {
+  margin-bottom: 20px;
+}
+
+#usernameInput {
+  padding: 8px;
+  width: 200px;
+}
+
+#searchBtn {
+  padding: 8px 16px;
+}
+
+.profile-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.profile-card img {
+  width: 80px;
+  border-radius: 50%;
+}
+
+.error {
+  color: red;
+}
