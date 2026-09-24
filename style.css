@@ -46,3 +46,15 @@ body {
   font-weight: bold;
   margin-right: 10px;
 }
+
+.lang-row {
+  margin-top: 8px;
+  text-align: left;
+}
+
+.lang-bar {
+  height: 8px;
+  background: #4CAF50;
+  border-radius: 4px;
+  margin-top: 2px;
+}
