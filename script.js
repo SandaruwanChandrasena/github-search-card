@@ -17,24 +17,59 @@ async function fetchUser(username) {
   resultDiv.innerHTML = '<p>Loading...</p>';
 
   try {
-    const response = await fetch(`https://api.github.com/users/${username}`);
+    const [userResponse, reposResponse] = await Promise.all([
+      fetch(`https://api.github.com/users/${username}`),
+      fetch(`https://api.github.com/users/${username}/repos?per_page=100`)
+    ]);
 
-    if (response.status === 404) {
+    if (userResponse.status === 404) {
       resultDiv.innerHTML = '<p class="error">User not found.</p>';
       return;
     }
 
-    if (!response.ok) {
+    if (!userResponse.ok || !reposResponse.ok) {
       resultDiv.innerHTML = '<p class="error">Something went wrong. Try again.</p>';
       return;
     }
 
-    const user = await response.json();
+    const user = await userResponse.json();
+    const repos = await reposResponse.json();
+
+    const topRepos = getTopRepos(repos);
+
     showUser(user);
+    showRepos(topRepos);
 
   } catch (error) {
     resultDiv.innerHTML = '<p class="error">Network error. Check your connection.</p>';
   }
+}
+
+function getTopRepos(repos) {
+  return repos
+    .filter(repo => !repo.fork)
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 5);
+}
+
+function showRepos(repos) {
+  if (repos.length === 0) {
+    resultDiv.innerHTML += '<p>No original repos found.</p>';
+    return;
+  }
+
+  const repoCards = repos.map(repo => `
+    <div class="repo-card">
+      <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+      <span>⭐ ${repo.stargazers_count}</span>
+      <p>${repo.description || 'No description.'}</p>
+    </div>
+  `).join('');
+
+  resultDiv.innerHTML += `
+    <h3>Best Work</h3>
+    ${repoCards}
+  `;
 }
 
 function showUser(user) {
