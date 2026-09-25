@@ -1,7 +1,30 @@
 const searchBtn = document.getElementById('searchBtn');
 const usernameInput = document.getElementById('usernameInput');
 const resultDiv = document.getElementById('result');
+const themeToggle = document.getElementById('themeToggle');
 
+// ---- Dark mode ----
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    themeToggle.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+});
+
+// ---- Search ----
 searchBtn.addEventListener('click', () => {
   const username = usernameInput.value.trim();
 
@@ -11,6 +34,12 @@ searchBtn.addEventListener('click', () => {
   }
 
   fetchUser(username);
+});
+
+usernameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    searchBtn.click();
+  }
 });
 
 async function fetchUser(username) {
@@ -44,6 +73,7 @@ async function fetchUser(username) {
     const recentRepos = getRecentRepos(repos);
     const languages = getLanguageStats(repos);
 
+    resultDiv.innerHTML = '';
     showUser(user);
     showRepos(topRepos);
     showRecentRepos(recentRepos);
@@ -88,13 +118,15 @@ function getLanguageStats(repos) {
 
 function showLanguages(languages) {
   if (languages.length === 0) {
-    resultDiv.innerHTML += '<p>No language data found.</p>';
     return;
   }
 
   const bars = languages.map(item => `
     <div class="lang-row">
-      <span>${item.language} (${item.percent}%)</span>
+      <div class="lang-label">
+        <span>${item.language}</span>
+        <span>${item.percent}%</span>
+      </div>
       <div class="lang-track">
         <div class="lang-bar" style="width: ${item.percent}%"></div>
       </div>
@@ -102,8 +134,8 @@ function showLanguages(languages) {
   `).join('');
 
   resultDiv.innerHTML += `
-    <h3>Languages</h3>
-    ${bars}
+    <h3 class="fade-in">💻 Languages</h3>
+    <div class="fade-in">${bars}</div>
   `;
 }
 
@@ -148,15 +180,17 @@ function showRecentRepos(repos) {
   }
 
   const repoCards = repos.map(repo => `
-    <div class="repo-card">
-      <a href="${repo.html_url}" target="_blank">${repo.name}</a>
-      <span>${timeAgo(repo.pushed_at)}</span>
+    <div class="repo-card fade-in">
+      <div class="repo-top">
+        <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+        <span class="badge">🕒 ${timeAgo(repo.pushed_at)}</span>
+      </div>
       <p>${repo.description || 'No description.'}</p>
     </div>
   `).join('');
 
   resultDiv.innerHTML += `
-    <h3>Recent Projects</h3>
+    <h3 class="fade-in">🕒 Recent Projects</h3>
     ${repoCards}
   `;
 }
@@ -168,26 +202,28 @@ function showRepos(repos) {
   }
 
   const repoCards = repos.map(repo => `
-    <div class="repo-card">
-      <a href="${repo.html_url}" target="_blank">${repo.name}</a>
-      <span>⭐ ${repo.stargazers_count}</span>
+    <div class="repo-card fade-in">
+      <div class="repo-top">
+        <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+        <span class="badge">⭐ ${repo.stargazers_count}</span>
+      </div>
       <p>${repo.description || 'No description.'}</p>
     </div>
   `).join('');
 
   resultDiv.innerHTML += `
-    <h3>Best Work</h3>
+    <h3 class="fade-in">🏆 Best Work</h3>
     ${repoCards}
   `;
 }
 
 function showUser(user) {
-  resultDiv.innerHTML = `
-    <div class="profile-card">
+  resultDiv.innerHTML += `
+    <div class="profile-card fade-in">
       <img src="${user.avatar_url}" alt="${user.login}" />
       <h2>${user.name || user.login}</h2>
-      <p>${user.bio || 'No bio available.'}</p>
-      <p><strong>Followers:</strong> ${user.followers}</p>
+      <p class="bio">${user.bio || 'No bio available.'}</p>
+      <span class="stat-pill">👥 ${user.followers} followers</span>
     </div>
   `;
 }
