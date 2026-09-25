@@ -3,14 +3,18 @@
 A simple web page that shows a dashboard for any GitHub user. Type a username, click search, and see their profile, top repos, recent projects, and most-used languages.
 
 ## Live Demo
-**https://sandaruwanchandrasena.github.io/github-search-card/**
+_(Add your GitHub Pages link here once deployed)_
 
 ## Features
 
 - **Profile card** — photo, name, bio, and follower count.
 - **Best Work** — top 5 original repos, sorted by stars.
 - **Recent Projects** — top 5 repos, sorted by most recently updated.
-- **Languages** — percentage breakdown of languages used across repos.
+- **Languages** — percentage breakdown of languages used across repos, shown as bars.
+- **Dark mode** — toggle button in the corner, remembers your choice next time you visit.
+- **Mobile friendly** — layout adjusts for small screens.
+- **Icons** — quick visual cues for stars, followers, and recent activity.
+- **Smooth animations** — cards fade in gently when results load.
 - **Error handling** — shows a friendly message if the user isn't found or the API rate limit is hit.
 
 ## Built With
@@ -20,7 +24,7 @@ A simple web page that shows a dashboard for any GitHub user. Type a username, c
 
 ## How It Works
 
-1. You type a GitHub username and click **Search**.
+1. You type a GitHub username and click **Search** (or press Enter).
 2. The app calls two GitHub API endpoints at the same time using `Promise.all`:
    - `/users/{username}` for profile data
    - `/users/{username}/repos` for their repositories
@@ -29,6 +33,7 @@ A simple web page that shows a dashboard for any GitHub user. Type a username, c
    - Repos are sorted by stars or by last update with `sort()`.
    - Language counts are tallied with `reduce()` and turned into percentages.
 4. If GitHub returns a rate limit error (403), the app reads the reset time from the response headers and shows the user when to try again.
+5. Your dark/light mode choice is saved in the browser, so it stays the same next time you open the page.
 
 ## Running Locally
 
@@ -48,3 +53,4 @@ This project was built step by step to practice:
 - Running requests in parallel with `Promise.all`
 - Cleaning and transforming data with `filter`, `sort`, and `reduce`
 - Handling errors and API rate limits gracefully
+- Building a responsive, dark-mode-friendly UI with CSS variables
