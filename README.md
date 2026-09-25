@@ -2,8 +2,8 @@
 
 A simple web page that shows a dashboard for any GitHub user. Type a username, click search, and see their profile, top repos, recent projects, and most-used languages.
 
-## Live Demo
-_(Add your GitHub Pages link here once deployed)_
+## Live Demo -> 
+**https://sandaruwanchandrasena.github.io/github-search-card/**
 
 ## Features
 
